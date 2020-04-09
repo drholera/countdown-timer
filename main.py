@@ -20,11 +20,16 @@ class CountdownTimer(QtWidgets.QMainWindow):
 
         self.ui.lcdNumber.setDigitCount(8)
         self.ui.lcdNumber.setGeometry(QtCore.QRect(130, 90, 600, 80))
+        self.ui.lcdNumber.display('00:00:00')
 
         self.ui.pushButton.clicked.connect(self.click_start)
 
+        self.ui.pushButton_2.clicked.connect(self.click_pause)
+        self.ui.pushButton_3.clicked.connect(self.click_stop)
+
     def click_start(self):
         if self.__t.isActive():
+            self.__t.timeout.disconnect()
             self.__t.stop()
 
         countdown_time = self.ui.lineEdit.text()
@@ -47,6 +52,18 @@ class CountdownTimer(QtWidgets.QMainWindow):
         self.__t.timeout.connect(run_timer)
         self.__t.setInterval(1000)
         self.__t.start()
+
+    def click_pause(self):
+        if self.__t.isActive():
+            self.__t.stop()
+        else:
+            self.__t.start()
+
+    def click_stop(self):
+        if self.__t.isActive():
+            self.__t.stop()
+            self.__seconds = 0
+            self.ui.lcdNumber.display('00:00:00')
 
 
 if __name__ == '__main__':
